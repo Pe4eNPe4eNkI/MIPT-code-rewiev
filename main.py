@@ -3,13 +3,14 @@ from database import DataBase
 
 def pizza_time():
     db.insert()
-    print(db.select().fetchall())
+    category = ['Пицца', 'Паста', 'Горячие блюда', 'Салаты и закуски']
+    for item in category:
+        all_item = db.select_name(item).fetchall()
+        for cur_item in all_item:
+            item = db.select_elem(cur_item[0]).fetchall()
+            print('Название: ' + item[0][0] + ' ' + item[0][1] + '\n' + 'Описание: ' + item[0][2] + '\n' + item[0][3])
 
 
 if __name__ == '__main__':
-    try:
-        db = DataBase()
-        pizza_time()
-
-    except:
-        print("Oops!")
+    db = DataBase()
+    pizza_time()
