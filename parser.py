@@ -2,13 +2,22 @@ import urllib.request
 from bs4 import BeautifulSoup
 
 
+def convert_to_binary_data(filename):
+    with open(filename, 'rb') as file:
+        blob_data = file.read()
+    return blob_data
+
+
 def parse(all_quotes, found_quotes, bsObj):
     category = bsObj.find('h1', {'class': 'category-name ptx-10'}).text
     for found_quote in found_quotes:
         quote_name = found_quote.find('div', {'class': 'product_carousel__title'}).text
         quote_desc = found_quote.find('div', {'class': 'product_carousel__description'}).text
         quote_price = found_quote.find('div', {'class': 'product_carousel__price'}).text
+        find_img = found_quote.find('div', {'class': 'product_carousel__img'})
+        quote_img = find_img.find('img').get('src')
 
+        print(quote_img)
         all_quotes.append({
             'type': category,
             'name': ' '.join(quote_name.split()),
@@ -66,3 +75,6 @@ def salad_parse():
     parse(all_quotes, found_quotes, bsObj)
 
     return all_quotes
+
+
+pizza_parse()

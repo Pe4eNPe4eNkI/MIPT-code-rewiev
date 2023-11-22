@@ -25,13 +25,14 @@ def url(message):
 @bot.message_handler(content_types=['text'])
 def get_item(message):
     category = ['🍕 Пицца', '🍜 Паста', '🍲 Горячие блюда', '🥗 Салаты и закуски']
-    for val in category:
-        if message.text == val:
-            text = f'🍽 Весь ассортимент выбранной категории перед вами {message.text[:1]}:\n\n'
-            for elem in db.select_name(message.text[2:]).fetchall():
-                text += message.text[:1] + ' ' + elem[0] + '\n'
-            text += '\n💵 Чтобы узнать описание и цену, напишите название блюда.'
-            bot.send_message(message.from_user.id, text)
+    if message.text in category:
+        text = f'🍽 Весь ассортимент выбранной категории перед вами {message.text[:1]}:\n\n'
+        for elem in db.select_name(message.text[2:]).fetchall():
+            text += message.text[:1] + ' ' + elem[0] + '\n'
+        text += '\n💵 Чтобы узнать описание и цену, напишите название блюда.'
+        bot.send_message(message.from_user.id, text)
+    #else:
+    #    bot.send_message(message.from_user.id, "Извините, такой категории нет!")
 
     for item in category:
         all_item = db.select_name(item[2:]).fetchall()
@@ -41,6 +42,8 @@ def get_item(message):
                 text = '📍 Название: ' + item[0][0] + ' ' + item[0][1] + '\n' + '📍 Описание: ' + item[0][
                     2] + '\n\n' + '💵 ' + item[0][3]
                 bot.send_message(message.from_user.id, text)
+    #    if message.text not in all_item:
+    #        bot.send_message(message.from_user.id, "Извините, такого блюда в меню нет!")
 
 
 print('hello world')
