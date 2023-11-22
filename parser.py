@@ -15,14 +15,14 @@ def parse(all_quotes, found_quotes, bsObj):
         quote_desc = found_quote.find('div', {'class': 'product_carousel__description'}).text
         quote_price = found_quote.find('div', {'class': 'product_carousel__price'}).text
         find_img = found_quote.find('div', {'class': 'product_carousel__img'})
-        quote_img = find_img.find('img').get('src')
+        quote_img = 'https://ilpatio.ru/' + find_img.find('img').get('src')
 
-        print(quote_img)
         all_quotes.append({
             'type': category,
             'name': ' '.join(quote_name.split()),
             'description': ' '.join(quote_desc.split()),
-            'price': ' '.join(quote_price.split())
+            'price': ' '.join(quote_price.split()),
+            'image': quote_img  # ' '.join(format(ord(x), 'b') for x in quote_img)
         })
 
 

@@ -3,6 +3,12 @@ from sqlite3 import Cursor
 from parser import pizza_parse, pasta_parse, hot_dish_parse, salad_parse
 
 
+def convert_to_binary_data(filename):
+    with open(filename, 'rb') as file:
+        blob_data = file.read()
+    return blob_data
+
+
 class DataBase:
     def __init__(self):
         self.conn = sqlite3.connect("IlPatio.db", check_same_thread=False)
@@ -12,7 +18,8 @@ class DataBase:
             type TEXT,
             name VARCHAR(255) PRIMARY KEY,
             desc TEXT,
-            price TEXT
+            price TEXT,
+            image TEXT
         )''')
 
     def insert(self):
@@ -20,8 +27,8 @@ class DataBase:
         menu = [pizza_parse(), pasta_parse(), hot_dish_parse(), salad_parse()]
         for val in menu:
             for elem in val:
-                cursor.execute(f'''INSERT INTO Menu (type, name, desc, price) VALUES 
-                ('{elem['type']}', '{elem['name']}', '{elem['description']}', '{elem['price']}')
+                cursor.execute(f'''INSERT INTO Menu (type, name, desc, price, image) VALUES 
+                ('{elem['type']}', '{elem['name']}', '{elem['description']}', '{elem['price']}', '{elem['image']}')
                 ''')
 
     def select_all(self) -> Cursor:
