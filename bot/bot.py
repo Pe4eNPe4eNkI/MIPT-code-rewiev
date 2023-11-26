@@ -1,13 +1,13 @@
 import telebot
 import urllib
 from telebot import types
-from database import DataBase
+from db import database
 
-f = open('.idea/token.txt', 'r')
+f = open('../parser/.idea/token.txt', 'r')
 TOKEN = f.readline()
 bot = telebot.TeleBot(TOKEN)
 f.close()
-db = DataBase()
+db = database.DataBase()
 db.insert()
 
 
@@ -20,7 +20,8 @@ def greeting(message):
     salad_btn = types.KeyboardButton(text='🥗 Салаты и закуски')
 
     markup.add(pizza_btn, pasta_btn, hot_dish_btn, salad_btn)
-    text = "Доброго времени суток!\nЯ бот, берущий данные с сайта ресторана Il Patio!\nКакую катеорию меню вы хотите выбрать?"
+    text = "Доброго времени суток!\n" \
+           "Я бот, берущий данные с сайта ресторана Il Patio!\nКакую катеорию меню вы хотите выбрать?"
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
 
