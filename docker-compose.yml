@@ -9,9 +9,11 @@ services:
   bot:
     build: ./bot
     depends_on:
-      - parser
-      
+      - db
+
   db:
+    restart: always
+    build: ./db
     image:
       postgres:16.1
     expose:

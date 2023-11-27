@@ -1,5 +1,8 @@
 import urllib.request
 from bs4 import BeautifulSoup
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+
 
 
 def convert_to_binary_data(filename):
@@ -18,8 +21,8 @@ def parse(all_quotes, found_quotes, bsObj):
         quote_img = 'https://ilpatio.ru/' + find_img.find('img').get('src')
 
         all_quotes.append({
-            'type': category,
-            'name': ' '.join(quote_name.split()),
+            'type_p': category,
+            'name_p': ' '.join(quote_name.split()),
             'description': ' '.join(quote_desc.split()),
             'price': ' '.join(quote_price.split()),
             'image': quote_img  # ' '.join(format(ord(x), 'b') for x in quote_img)
@@ -77,4 +80,25 @@ def salad_parse():
     return all_quotes
 
 
-pizza_parse()
+conn = psycopg2.connect(
+            database="il_patio_db",
+            user="postgres",
+            password="root",
+            host="db")
+
+conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+cur = conn.cursor()
+
+
+def insert():
+        cursor = conn.cursor()
+        menu = [pizza_parse(), pasta_parse(), hot_dish_parse(), salad_parse()]
+        for val in menu:
+            for elem in val:
+                text = 'INSERT INTO Menu (type_p, name_p, description, price, image) VALUES (%s, %s, %s, %s, %s);'
+                exec_tuple = (elem['type_p'], elem['name_p'], elem['description'], elem['price'], elem['image'])
+                cursor.execute(text, exec_tuple)
+
+
+cur.execute('DROP TABLE IF EXISTS Menu')
+insert()

@@ -1,14 +1,51 @@
 import telebot
 import urllib
 from telebot import types
-from db import database
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-f = open('../parser/.idea/token.txt', 'r')
+
+conn = psycopg2.connect(
+            database="il_patio_db",
+            user="postgres",
+            password="root",
+            host="db")
+
+conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+cur = conn.cursor()
+cur.execute('DROP TABLE IF EXISTS Menu')
+
+
+def select_all():
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Menu')
+    return cursor
+
+def select_category(category):
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Menu WHERE type_p =%s', (category,))
+    return cursor
+
+def select_elem(elem):
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Menu WHERE name_p =%s', (elem,))
+    return cursor
+
+def select_name(category):
+    cursor = conn.cursor()
+    cursor.execute('SELECT name_p FROM Menu WHERE type =%s', (category,))
+    return cursor
+
+def select_all_category():
+    cursor = conn.cursor()
+    cursor.execute('SELECT type_p FROM Menu')
+    return cursor
+
+
+f = open('token.txt', 'r')
 TOKEN = f.readline()
 bot = telebot.TeleBot(TOKEN)
 f.close()
-db = database.DataBase()
-db.insert()
 
 
 @bot.message_handler(commands=['start'])
@@ -30,16 +67,16 @@ def choise_category(message):
     category = ['🍕 Пицца', '🍜 Паста', '🍲 Горячие блюда', '🥗 Салаты и закуски']
     if message.text in category:
         text = f'🍽 Весь ассортимент выбранной категории перед вами {message.text[:1]}:\n\n'
-        for elem in db.select_name(message.text[2:]).fetchall():
+        for elem in select_name(message.text[2:]).fetchall():
             text += message.text[:1] + ' ' + elem[0] + '\n'
         text += '\n💵 Чтобы узнать описание и цену, напишите название блюда.'
         bot.send_message(message.from_user.id, text)
 
     for item in category:
-        all_item = db.select_name(item[2:]).fetchall()
+        all_item = select_name(item[2:]).fetchall()
         for cur_item in all_item:
             if message.text == cur_item[0]:
-                item = db.select_elem(cur_item[0]).fetchall()
+                item = select_elem(cur_item[0]).fetchall()
                 text = '📍 Название: ' + item[0][0] + ' ' + item[0][1] + '\n' + '📍 Описание: ' + item[0][
                     2] + '\n\n' + '💵 ' + item[0][3]
 
