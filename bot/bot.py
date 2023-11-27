@@ -9,7 +9,7 @@ conn = psycopg2.connect(
             dbname="il_patio_db",
             user="postgres",
             password="root",
-            host="postgres")
+            host="db")
 
 conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 cur = conn.cursor()
