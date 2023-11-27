@@ -6,10 +6,10 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 conn = psycopg2.connect(
-            database="il_patio_db",
+            dbname="il_patio_db",
             user="postgres",
             password="root",
-            host="db")
+            host="postgres")
 
 conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 cur = conn.cursor()

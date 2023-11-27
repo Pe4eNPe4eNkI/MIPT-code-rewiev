@@ -4,14 +4,14 @@ services:
   parser:
     build: ./parser
     depends_on:
-      - db
+      - postgres
 
   bot:
     build: ./bot
     depends_on:
-      - db
+      - postgres
 
-  db:
+  postgres:
     restart: always
     build: ./db
     image:
