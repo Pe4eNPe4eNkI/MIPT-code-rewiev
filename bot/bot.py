@@ -2,43 +2,44 @@ import telebot
 import urllib
 from telebot import types
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 conn = psycopg2.connect(
             dbname="il_patio_db",
             user="postgres",
             password="root",
-            host="db")
+            host="database")
 
-conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 cur = conn.cursor()
-cur.execute('DROP TABLE IF EXISTS Menu')
-
 
 def select_all():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Menu')
+    conn.comit()
     return cursor
 
 def select_category(category):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Menu WHERE type_p =%s', (category,))
+    conn.comit()
     return cursor
 
 def select_elem(elem):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Menu WHERE name_p =%s', (elem,))
+    conn.comit()
     return cursor
 
 def select_name(category):
     cursor = conn.cursor()
     cursor.execute('SELECT name_p FROM Menu WHERE type =%s', (category,))
+    conn.comit()
     return cursor
 
 def select_all_category():
     cursor = conn.cursor()
     cursor.execute('SELECT type_p FROM Menu')
+    conn.comit()
     return cursor
 
 
