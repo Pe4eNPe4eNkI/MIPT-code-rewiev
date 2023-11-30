@@ -1,21 +1,8 @@
 version: '3'
 
 services:
-  parser:
-    build: ./parser
-    depends_on:
-      - database
-    networks:
-      - skibidi
-  
-  bot:
-    build: ./bot
-    depends_on:
-      - database
-    networks:
-      - skibidi
-
   database:
+    container_name: database
     restart: always
     image:
       postgres:latest
@@ -36,6 +23,24 @@ services:
       - ./database/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
     networks:
       - skibidi
+  
+  parser:
+    build: ./parser
+    depends_on:
+      - database
+    networks:
+      - skibidi
+    links:
+      - "database:database"  
+
+  bot:
+    build: ./bot
+    depends_on:
+      - database
+    networks:
+      - skibidi
+    links:
+      - "database:database"  
 
 volumes:
   postgres-data:
