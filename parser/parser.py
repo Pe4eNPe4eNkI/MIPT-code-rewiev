@@ -94,7 +94,7 @@ def insert():
                 text = 'INSERT INTO Menu (type_p, name_p, description_p, price, image_p) VALUES (%s, %s, %s, %s, %s);'
                 exec_tuple = (elem['type_p'], elem['name_p'], elem['description_p'], elem['price'], elem['image_p'])
                 cursor.execute(text, exec_tuple)
-                conn.comit()
+                conn.commit()
 
 
 insert()

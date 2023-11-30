@@ -15,31 +15,31 @@ cur = conn.cursor()
 def select_all():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Menu')
-    conn.comit()
+    conn.commit()
     return cursor
 
 def select_category(category):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Menu WHERE type_p =%s', (category,))
-    conn.comit()
+    conn.commit()
     return cursor
 
 def select_elem(elem):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Menu WHERE name_p =%s', (elem,))
-    conn.comit()
+    conn.commit()
     return cursor
 
 def select_name(category):
     cursor = conn.cursor()
-    cursor.execute('SELECT name_p FROM Menu WHERE type =%s', (category,))
-    conn.comit()
+    cursor.execute('SELECT name_p FROM Menu WHERE type_p =%s', (category,))
+    conn.commit()
     return cursor
 
 def select_all_category():
     cursor = conn.cursor()
     cursor.execute('SELECT type_p FROM Menu')
-    conn.comit()
+    conn.commit()
     return cursor
 
 
