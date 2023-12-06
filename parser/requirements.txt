@@ -2,4 +2,3 @@ beautifulsoup4
 urllib3
 Psycopg2-binary
 sockets
-git

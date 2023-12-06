@@ -11,14 +11,6 @@ OPTIONS = {
 }
 
 
-@app.route('/select_all')
-def select_all():
-    with psycopg2.connect(**OPTIONS) as conn:
-        with conn.cursor() as cursor:
-            cursor.execute('SELECT * FROM Menu')
-            return jsonify(list(map(list, cursor.fetchall())))
-
-
 @app.route('/select_elem/<elem>')
 def select_elem(elem):
     with psycopg2.connect(**OPTIONS) as conn:
@@ -36,4 +28,4 @@ def select_name(category):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)
