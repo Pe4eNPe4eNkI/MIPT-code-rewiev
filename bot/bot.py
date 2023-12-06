@@ -1,52 +1,13 @@
 import telebot
 import urllib
 from telebot import types
-import psycopg2
+import requests
+import os
+from dotenv import load_dotenv
 
-
-conn = psycopg2.connect(
-            dbname="il_patio_db",
-            user="postgres",
-            password="root",
-            host="database")
-
-cur = conn.cursor()
-
-def select_all():
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Menu')
-    conn.commit()
-    return cursor
-
-def select_category(category):
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Menu WHERE type_p =%s', (category,))
-    conn.commit()
-    return cursor
-
-def select_elem(elem):
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Menu WHERE name_p =%s', (elem,))
-    conn.commit()
-    return cursor
-
-def select_name(category):
-    cursor = conn.cursor()
-    cursor.execute('SELECT name_p FROM Menu WHERE type_p =%s', (category,))
-    conn.commit()
-    return cursor
-
-def select_all_category():
-    cursor = conn.cursor()
-    cursor.execute('SELECT type_p FROM Menu')
-    conn.commit()
-    return cursor
-
-
-f = open('token.txt', 'r')
-TOKEN = f.readline()
-bot = telebot.TeleBot(TOKEN)
-f.close()
+load_dotenv()
+token = os.getenv('TOKEN')
+bot = telebot.TeleBot(token)
 
 
 @bot.message_handler(commands=['start'])
@@ -68,16 +29,18 @@ def choise_category(message):
     category = ['🍕 Пицца', '🍜 Паста', '🍲 Горячие блюда', '🥗 Салаты и закуски']
     if message.text in category:
         text = f'🍽 Весь ассортимент выбранной категории перед вами {message.text[:1]}:\n\n'
-        for elem in select_name(message.text[2:]).fetchall():
+
+        req = requests.get(f'http://backend:8080/select_name/{message.text[2:]}').json()
+        for elem in req:
             text += message.text[:1] + ' ' + elem[0] + '\n'
         text += '\n💵 Чтобы узнать описание и цену, напишите название блюда.'
         bot.send_message(message.from_user.id, text)
 
     for item in category:
-        all_item = select_name(item[2:]).fetchall()
+        all_item = requests.get(f'http://backend:8080/select_name/{item[2:]}').json()
         for cur_item in all_item:
             if message.text == cur_item[0]:
-                item = select_elem(cur_item[0]).fetchall()
+                item = requests.get(f'http://backend:8080/select_elem/{cur_item[0]}').json()
                 text = '📍 Название: ' + item[0][0] + ' ' + item[0][1] + '\n' + '📍 Описание: ' + item[0][
                     2] + '\n\n' + '💵 ' + item[0][3]
 

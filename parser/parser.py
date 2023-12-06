@@ -9,8 +9,8 @@ def convert_to_binary_data(filename):
     return blob_data
 
 
-def parse(all_quotes, found_quotes, bsObj):
-    category = bsObj.find('h1', {'class': 'category-name ptx-10'}).text
+def parse(all_quotes, found_quotes, bs_obj):
+    category = bs_obj.find('h1', {'class': 'category-name ptx-10'}).text
     for found_quote in found_quotes:
         quote_name = found_quote.find('div', {'class': 'product_carousel__title'}).text
         quote_desc = found_quote.find('div', {'class': 'product_carousel__description'}).text
@@ -33,10 +33,10 @@ def pizza_parse():
     for i in range(1, 3):
         request = urllib.request.urlopen(f'https://ilpatio.ru/category/pitstsa/?page={i}')
         html = request.read()
-        bsObj = BeautifulSoup(html, 'html.parser')
-        found_quotes = bsObj.find_all('div', {'class': 'product_list__item phx-15'})
+        bs_obj = BeautifulSoup(html, 'html.parser')
+        found_quotes = bs_obj.find_all('div', {'class': 'product_list__item phx-15'})
 
-        parse(all_quotes, found_quotes, bsObj)
+        parse(all_quotes, found_quotes, bs_obj)
 
     return all_quotes
 
@@ -46,10 +46,10 @@ def pasta_parse():
     for i in range(1, 3):
         request = urllib.request.urlopen(f'https://ilpatio.ru/category/pasta/?page={i}')
         html = request.read()
-        bsObj = BeautifulSoup(html, 'html.parser')
-        found_quotes = bsObj.find_all('div', {'class': 'product_list__item phx-15'})
+        bs_obj = BeautifulSoup(html, 'html.parser')
+        found_quotes = bs_obj.find_all('div', {'class': 'product_list__item phx-15'})
 
-        parse(all_quotes, found_quotes, bsObj)
+        parse(all_quotes, found_quotes, bs_obj)
 
     return all_quotes
 
@@ -58,10 +58,10 @@ def hot_dish_parse():
     all_quotes = []
     request = urllib.request.urlopen(f'https://ilpatio.ru/category/goryachie-blyuda/')
     html = request.read()
-    bsObj = BeautifulSoup(html, 'html.parser')
-    found_quotes = bsObj.find_all('div', {'class': 'product_list__item phx-15'})
+    bs_obj = BeautifulSoup(html, 'html.parser')
+    found_quotes = bs_obj.find_all('div', {'class': 'product_list__item phx-15'})
 
-    parse(all_quotes, found_quotes, bsObj)
+    parse(all_quotes, found_quotes, bs_obj)
 
     return all_quotes
 
@@ -70,31 +70,34 @@ def salad_parse():
     all_quotes = []
     request = urllib.request.urlopen(f'https://ilpatio.ru/category/salaty-i-zakuski/')
     html = request.read()
-    bsObj = BeautifulSoup(html, 'html.parser')
-    found_quotes = bsObj.find_all('div', {'class': 'product_list__item phx-15'})
+    bs_obj = BeautifulSoup(html, 'html.parser')
+    found_quotes = bs_obj.find_all('div', {'class': 'product_list__item phx-15'})
 
-    parse(all_quotes, found_quotes, bsObj)
+    parse(all_quotes, found_quotes, bs_obj)
 
     return all_quotes
 
 
 conn = psycopg2.connect(
-            database="il_patio_db",
-            user="postgres",
-            password="root",
-            host="database")
+    database="il_patio_db",
+    user="postgres",
+    password="root",
+    host="database")
 
 cur = conn.cursor()
 
+
 def insert():
-        cursor = conn.cursor()
-        menu = [pizza_parse(), pasta_parse(), hot_dish_parse(), salad_parse()]
-        for val in menu:
-            for elem in val:
-                text = 'INSERT INTO Menu (type_p, name_p, description_p, price, image_p) VALUES (%s, %s, %s, %s, %s);'
-                exec_tuple = (elem['type_p'], elem['name_p'], elem['description_p'], elem['price'], elem['image_p'])
-                cursor.execute(text, exec_tuple)
-                conn.commit()
+    cursor = conn.cursor()
+    menu = [pizza_parse(), pasta_parse(), hot_dish_parse(), salad_parse()]
+    for val in menu:
+        for elem in val:
+            text = '''INSERT INTO Menu (type_p, name_p, description_p, price, image_p) 
+            VALUES (%s, %s, %s, %s, %s) on conflict  (name_p) do nothing;'''
+            exec_tuple = (elem['type_p'], elem['name_p'], elem['description_p'], elem['price'], elem['image_p'])
+            cursor.execute(text, exec_tuple)
+            conn.commit()
 
 
-insert()
+if __name__ == '__main__':
+    insert()

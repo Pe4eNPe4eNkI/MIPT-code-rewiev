@@ -1,6 +1,4 @@
 venv
-IlPatio.db
-IlPatio.db-journal
 .idea
 __pycache__
 img.jpg
