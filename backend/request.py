@@ -27,5 +27,13 @@ def select_name(category):
             return jsonify(list(map(list, cursor.fetchall())))
 
 
+@app.route('/select_all_in_category/<category>')
+def select_all_in_category(category):
+    with psycopg2.connect(**OPTIONS) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT * FROM Menu WHERE type_p =%s', (category,))
+            return jsonify(list(map(list, cursor.fetchall())))
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

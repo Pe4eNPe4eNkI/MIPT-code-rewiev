@@ -29,7 +29,6 @@ def choise_category(message):
     category = ['🍕 Пицца', '🍜 Паста', '🍲 Горячие блюда', '🥗 Салаты и закуски']
     if message.text in category:
         text = f'🍽 Весь ассортимент выбранной категории перед вами {message.text[:1]}:\n\n'
-
         req = requests.get(f'http://backend:8080/select_name/{message.text[2:]}').json()
         for elem in req:
             text += message.text[:1] + ' ' + elem[0] + '\n'
@@ -37,20 +36,19 @@ def choise_category(message):
         bot.send_message(message.from_user.id, text)
 
     for item in category:
+        pass
         all_item = requests.get(f'http://backend:8080/select_name/{item[2:]}').json()
         for cur_item in all_item:
             if message.text == cur_item[0]:
                 item = requests.get(f'http://backend:8080/select_elem/{cur_item[0]}').json()
                 text = '📍 Название: ' + item[0][0] + ' ' + item[0][1] + '\n' + '📍 Описание: ' + item[0][
                     2] + '\n\n' + '💵 ' + item[0][3]
-
                 url = item[0][4]
                 f1 = open('img.jpg', 'wb')
                 f1.write(urllib.request.urlopen(url).read())
                 f1.close()
                 bot.send_chat_action(message.from_user.id, 'upload_photo')
                 img = open('img.jpg', 'rb')
-
                 bot.send_photo(message.chat.id, img, text, reply_to_message_id=message.message_id)
                 img.close()
 
