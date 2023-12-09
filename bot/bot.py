@@ -36,7 +36,6 @@ def choise_category(message):
         bot.send_message(message.from_user.id, text)
 
     for item in category:
-        pass
         all_item = requests.get(f'http://backend:8080/select_name/{item[2:]}').json()
         for cur_item in all_item:
             if message.text == cur_item[0]:

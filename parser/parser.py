@@ -1,6 +1,7 @@
 import socket
 import time
 import urllib.request
+import re
 
 import psycopg2
 from bs4 import BeautifulSoup
@@ -28,11 +29,13 @@ def parse(all_quotes, found_quotes, bs_obj):
         find_img = found_quote.find('div', {'class': 'product_carousel__img'})
         quote_img = 'https://ilpatio.ru/' + find_img.find('img').get('src')
 
+        price = re.findall(r'\d+', ' '.join(quote_price.split()))
+
         all_quotes.append({
             'type_p': category,
             'name_p': ' '.join(quote_name.split()),
             'description_p': ' '.join(quote_desc.split()),
-            'price': ' '.join(quote_price.split()),
+            'price': int(price[0]),
             'image_p': quote_img
         })
 

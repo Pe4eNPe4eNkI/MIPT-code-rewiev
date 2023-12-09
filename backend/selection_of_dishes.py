@@ -1,3 +1,4 @@
+import random
 import socket
 import time
 
@@ -5,12 +6,12 @@ import psycopg2
 from flask import Flask
 
 app = Flask(__name__)
-
 OPTIONS = {
     'dbname': "il_patio_db",
     'user': "postgres",
     'password': "root",
     'host': "database",
+    'port': "5432"
 }
 
 
@@ -21,9 +22,20 @@ def select_all_in_category(category):
             return cursor.fetchall()
 
 
-def selection(category: str, prise: int):
+def selection(category: str, price: int):
     select_all = select_all_in_category(category)
-    return select_all
+    cur_price = 0
+    cart = []
+
+    while cur_price <= price:
+        item = random.choice(select_all)
+        if item not in cart and cur_price + int(item[3]) <= price:
+            cart.append(item)
+            cur_price += int(item[3])
+        else:
+            continue
+
+    print('\n\n', cart, '\n\n', cur_price, '\n\n')
 
 
 def wain_conn():
@@ -39,11 +51,7 @@ def wain_conn():
 
 if __name__ == '__main__':
     wain_conn()
-    while True:
-        try:
-            selection('Пицца', 0)
-        except psycopg2.OperationalError:
-            time.sleep(1)
+    selection('Пицца', 3000)
 
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=8080)
