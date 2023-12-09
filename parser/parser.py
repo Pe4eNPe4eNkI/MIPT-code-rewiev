@@ -33,7 +33,7 @@ def parse(all_quotes, found_quotes, bs_obj):
             'name_p': ' '.join(quote_name.split()),
             'description_p': ' '.join(quote_desc.split()),
             'price': ' '.join(quote_price.split()),
-            'image_p': quote_img  # ' '.join(format(ord(x), 'b') for x in quote_img)
+            'image_p': quote_img
         })
 
 
@@ -105,7 +105,7 @@ def wain_conn():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
-            s.connect(('db', 5432))
+            s.connect(('database', 5432))
             s.close()
             break
         except socket.error:
