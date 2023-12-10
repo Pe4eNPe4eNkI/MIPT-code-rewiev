@@ -3,7 +3,7 @@ import socket
 import time
 
 import psycopg2
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 OPTIONS = {
@@ -22,6 +22,7 @@ def select_all_in_category(category):
             return cursor.fetchall()
 
 
+@app.route('/selection/<category>/<int:price>')
 def selection(category: str, price: int):
     select_all = select_all_in_category(category)
     cur_price = 0
@@ -35,7 +36,7 @@ def selection(category: str, price: int):
         else:
             continue
 
-    print('\n\n', cart, '\n\n', cur_price, '\n\n')
+    return jsonify(list(map(list, cart)))
 
 
 def wain_conn():
@@ -50,8 +51,4 @@ def wain_conn():
 
 
 if __name__ == '__main__':
-    wain_conn()
-    selection('Пицца', 3000)
-
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080)

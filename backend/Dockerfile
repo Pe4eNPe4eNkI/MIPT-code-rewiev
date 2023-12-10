@@ -4,4 +4,4 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "selection_of_dishes.py"]
+CMD bash /start.sh
