@@ -3,6 +3,8 @@
 ## Discription
 This project created for parsing sait __https://ilpatio.ru/__
 
+tg: https://t.me/il_patio_bot
+
 ## Running project
 
 ```shell 
