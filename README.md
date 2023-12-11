@@ -1,7 +1,7 @@
 # MIPT-code-rewiev
 
 ## Discription
-This project created for parsing sait __https://ilpatio.ru/__
+This project created for parsing site __https://ilpatio.ru/__
 
 tg: __https://t.me/il_patio_bot__
 
