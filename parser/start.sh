@@ -2,4 +2,4 @@
 
 sleep 15
 
-python parser.sh
+python parser.py

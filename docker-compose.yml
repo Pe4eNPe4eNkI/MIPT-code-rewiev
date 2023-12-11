@@ -11,6 +11,8 @@ services:
       - "database:database"
     ports:
       - "5000:8080"
+      - "5001:8080"
+
 
   database:
     container_name: database
