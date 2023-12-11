@@ -13,8 +13,8 @@ bot = telebot.TeleBot(token)
 @bot.message_handler(commands=['start'])
 def greeting(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    choice_btn = types.KeyboardButton(text='Choice')
-    menu_btn = types.KeyboardButton(text='Menu')
+    choice_btn = types.KeyboardButton(text='Подборка')
+    menu_btn = types.KeyboardButton(text='Меню')
 
     text = '''Доброго времени суток!
 Я бот, берущий данные с сайта ресторана Il Patio!
@@ -30,24 +30,22 @@ def greeting(message):
 def choice_category(message):
     category = ['🍕 Пицца', '🍜 Паста', '🍲 Горячие блюда', '🥗 Салаты и закуски']
 
-    if message.text == 'Menu':
+    if message.text == 'Меню':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         pizza_btn = types.KeyboardButton(text='🍕 Пицца')
         pasta_btn = types.KeyboardButton(text='🍜 Паста')
         hot_dish_btn = types.KeyboardButton(text='🍲 Горячие блюда')
         salad_btn = types.KeyboardButton(text='🥗 Салаты и закуски')
-        back_bnt = types.KeyboardButton(text='🔙 Go back')
+        back_bnt = types.KeyboardButton(text='🔙 Назад')
         markup.add(pizza_btn, pasta_btn, hot_dish_btn, salad_btn, back_bnt)
         text = "Какую катеорию меню вы хотите выбрать?"
         bot.send_message(message.chat.id, text, reply_markup=markup)
 
-    
-
-    elif message.text == 'Choice':
+    elif message.text == 'Подборка':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        back_bnt = types.KeyboardButton(text='🔙 Go back')
+        back_bnt = types.KeyboardButton(text='🔙 Назад')
         markup.add(back_bnt)
-    
+
         text = '''Выберете категорию и укажите сумму в рублях, на которую хотите получить персональную подборку:
 🍕 Пицца
 🍜 Паста
@@ -65,8 +63,8 @@ def choice_category(message):
         for elem in category:
             if elem[2:].lower() in ' '.join(query).lower():
                 cur_category = elem[2:]
-                break 
-        print(cur_category,cur_price)
+                break
+        print(cur_category, cur_price)
 
         personal_selection = requests.get(f'http://backend:8080/selection/{cur_category}/{cur_price}').json()
         if personal_selection == [(1,)]:
@@ -80,13 +78,13 @@ def choice_category(message):
             desc += '\nСумма блюд: ' + str(cur_sum) + '₽\n'
             desc += '\nЕсли хотите получить более подробную информацию о блюде, напишите его название в чат'
             bot.send_message(message.from_user.id, desc)
-        
-    elif message.text == '🔙 Go back':
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            choice_btn = types.KeyboardButton(text='Choice')
-            menu_btn = types.KeyboardButton(text='Menu')
-            markup.add(choice_btn, menu_btn)
-            bot.send_message(message.chat.id, 'Good, go back', reply_markup=markup)
+
+    elif message.text == '🔙 Назад':
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        choice_btn = types.KeyboardButton(text='Choice')
+        menu_btn = types.KeyboardButton(text='Menu')
+        markup.add(choice_btn, menu_btn)
+        bot.send_message(message.chat.id, 'Good, go back', reply_markup=markup)
 
     elif message.text in category:
         text = f'🍽 Весь ассортимент выбранной категории перед вами {message.text[:1]}:\n\n'
