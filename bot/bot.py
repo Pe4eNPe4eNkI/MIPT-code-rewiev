@@ -1,9 +1,10 @@
-import telebot
-import urllib
-from telebot import types
-import requests
 import os
+import urllib
+
+import requests
+import telebot
 from dotenv import load_dotenv
+from telebot import types
 
 load_dotenv()
 token = os.getenv('TOKEN')

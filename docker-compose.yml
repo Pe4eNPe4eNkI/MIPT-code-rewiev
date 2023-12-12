@@ -50,6 +50,8 @@ services:
     build: ./bot
     depends_on:
       - database
+    environment:
+      TOKEN: '6703628611:AAGBgSP2yNa1lxOq6g6539JtaprWxA1YpQE'
     networks:
       - skibidi
     links:

@@ -1,15 +1,16 @@
+import os
+import re
 import socket
 import time
 import urllib.request
-import re
 
 import psycopg2
 from bs4 import BeautifulSoup
 
 OPTIONS = {
-    'dbname': "il_patio_db",
-    'user': "postgres",
-    'password': "root",
+    'dbname': os.getenv('POSTGRES_DB'),
+    'user': os.getenv('POSTGRES_USER'),
+    'password': os.getenv('POSTGRES_PASSWORD'),
     'host': "database"
 }
 

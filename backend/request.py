@@ -1,13 +1,15 @@
+import os
 import random
+
 import psycopg2
 from flask import Flask, jsonify
 
 app = Flask(__name__)
 
 OPTIONS = {
-    'dbname': "il_patio_db",
-    'user': "postgres",
-    'password': "root",
+    'dbname': os.getenv('POSTGRES_DB'),
+    'user': os.getenv('POSTGRES_USER'),
+    'password': os.getenv('POSTGRES_PASSWORD'),
     'host': "database"
 }
 
