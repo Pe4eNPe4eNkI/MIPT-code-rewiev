@@ -1,0 +1,3 @@
+Psycopg2-binary
+Flask
+sockets
